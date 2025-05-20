@@ -14,11 +14,13 @@ A web application to search for contacts in your Wix site using the Wix REST API
 - Integrated Wix Pricing Plans API to fetch subscription information for contacts
 - Implemented filtering to ensure each contact only displays their own subscription information
 - Added responsive UI elements for better user experience
+- Added birthday and age information display for contacts
 
 ### Wix API Integration
 - Used Contact V4 API for querying contacts by name
 - Implemented Pricing Plans Orders API to fetch subscription details
 - Added server-side filtering to match subscriptions with the correct contact using member IDs
+- Utilized contact birthdate information from the Wix Contacts API
 
 ## Setup
 
@@ -31,7 +33,7 @@ A web application to search for contacts in your Wix site using the Wix REST API
    }
    ```
 
-   To get these values: 
+   To get these values:
    (IGNORE THIS PART IF YOU ARE WORKING DIRECTLY WITH US, ASK OMAR FOR KEYS)
    - **siteId**: Go to your Wix Dashboard > Settings > General > Advanced > Site ID
    - **appId**: Create an app in the Wix Developer Center and get the App ID
@@ -68,6 +70,8 @@ A web application to search for contacts in your Wix site using the Wix REST API
   - Phone
   - Company
   - Job Title
+  - Birthday (formatted as "Month Day, Year")
+  - Age (calculated based on birthdate)
   - Member ID (if applicable)
 - Display subscription information for members:
   - Plan name
@@ -96,6 +100,7 @@ The application consists of the following key files:
      - Form submission and validation
      - API requests to the server endpoints
      - Processing and displaying contact and subscription data
+     - Birthday formatting and age calculation
      - Error handling and user feedback
 
 3. **server.js**
@@ -137,7 +142,7 @@ This application interacts with the following Wix REST API endpoints:
        }
      }
      ```
-   - **Response**: Returns contacts matching the search criteria with full contact details
+   - **Response**: Returns contacts matching the search criteria with full contact details, including birthdate information
 
 2. **List Orders by Member Endpoint**
    - **URL**: `https://www.wixapis.com/pricing-plans/v2/orders?memberId={memberId}`
@@ -178,6 +183,7 @@ The application implements a proxy server architecture to securely interact with
 5. **Data Flow**
    - Client sends search query → Server proxies to Wix Contacts API → Results displayed to user
    - For each member in results → Client requests subscription data → Server fetches and filters from Wix Pricing Plans API → Subscription data displayed with contact
+   - For each contact → Client extracts birthdate information → Client calculates age and formats birthday → Birthday and age displayed with contact
 
 ## Wix API Documentation Referenced
 
