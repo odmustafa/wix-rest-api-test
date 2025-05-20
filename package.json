@@ -1,0 +1,39 @@
+{
+  "name": "wix-rest-api-test",
+  "version": "1.0.0",
+  "description": "A web application to search for contacts in your Wix site using the Wix REST API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "wix",
+    "rest",
+    "api",
+    "contacts",
+    "pricing-plans"
+  ],
+  "author": "Omar Mustafa",
+  "license": "MIT",
+  "dependencies": {
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/odmustafa/wix-rest-api-test.git"
+  },
+  "bugs": {
+    "url": "https://github.com/odmustafa/wix-rest-api-test/issues"
+  },
+  "homepage": "https://github.com/odmustafa/wix-rest-api-test#readme"
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wix Contacts Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #3899ec;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #3899ec;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2b7cc0;
+        }
+
+        .results-container {
+            margin-top: 20px;
+        }
+
+        .contact-card {
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .subscriptions {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 4px;
+        }
+
+        .subscriptions h4 {
+            margin-top: 0;
+            color: #3899ec;
+        }
+
+        .subscriptions ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .subscriptions li {
+            padding: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background-color: white;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Wix Contacts Search</h1>
+
+    <div class="search-container">
+        <form id="searchForm">
+            <input type="text" id="nameSearch" placeholder="Enter name to search..." required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="loading" id="loading">Searching...</div>
+    <div class="error" id="error"></div>
+
+    <div class="results-container" id="results">
+        <!-- Results will be displayed here -->
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
