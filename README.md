@@ -31,7 +31,8 @@ A web application to search for contacts in your Wix site using the Wix REST API
    }
    ```
 
-   To get these values:
+   To get these values: 
+   (IGNORE THIS PART IF YOU ARE WORKING DIRECTLY WITH US, ASK OMAR FOR KEYS)
    - **siteId**: Go to your Wix Dashboard > Settings > General > Advanced > Site ID
    - **appId**: Create an app in the Wix Developer Center and get the App ID
    - **apiKey**: Generate an API Key in the Wix Developer Center for your app
