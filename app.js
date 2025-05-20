@@ -1,3 +1,16 @@
+// Function to format birthdate in a user-friendly way (e.g., "May 18, 1991")
+function formatBirthdate(dateString) {
+    // Parse the date string (format: YYYY-MM-DD)
+    const [year, month, day] = dateString.split('-').map(Number);
+
+    // Create a date object using UTC to avoid timezone issues
+    const date = new Date(Date.UTC(year, month - 1, day));
+
+    // Format the date using options
+    const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
+    return date.toLocaleDateString(undefined, options);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     // Get references to DOM elements
     const searchForm = document.getElementById('searchForm');
@@ -88,6 +101,27 @@ document.addEventListener('DOMContentLoaded', function () {
             const jobTitle = contact.info?.jobTitle || '';
             const contactId = contact.id;
             const memberId = contact.memberInfo?.memberId || '';
+            const birthdate = contact.info?.birthdate || '';
+
+            // Calculate age if birthdate is available
+            let age = '';
+            if (birthdate) {
+                // Parse the birthdate string directly (format: YYYY-MM-DD)
+                const [birthYear, birthMonth, birthDay] = birthdate.split('-').map(Number);
+
+                const today = new Date();
+                const currentYear = today.getFullYear();
+                const currentMonth = today.getMonth() + 1; // JavaScript months are 0-indexed
+                const currentDay = today.getDate();
+
+                // Calculate age
+                age = currentYear - birthYear;
+
+                // Adjust age if birthday hasn't occurred yet this year
+                if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDay < birthDay)) {
+                    age--;
+                }
+            }
 
             html += `
                 <div class="contact-card" id="contact-${contactId}">
@@ -97,6 +131,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
                     ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
                     ${jobTitle ? `<p><strong>Job Title:</strong> ${jobTitle}</p>` : ''}
+                    ${birthdate ? `<p><strong>Birthday:</strong> ${formatBirthdate(birthdate)}</p>` : ''}
+                    ${age ? `<p><strong>Age:</strong> ${age}</p>` : ''}
                     ${memberId ? `<p><strong>Member ID:</strong> ${memberId}</p>` : ''}
                     ${memberId ? `<div class="subscriptions" id="subscriptions-${contactId}"><p>Loading subscriptions...</p></div>` : ''}
                 </div>

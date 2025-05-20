@@ -159,63 +159,7 @@ const server = http.createServer((req, res) => {
 
         wixReq.end();
     }
-    // Handle email subscriptions query
-    else if (req.method === 'POST' && req.url === '/api/email-subscriptions/query') {
-        let body = '';
 
-        req.on('data', chunk => {
-            body += chunk.toString();
-        });
-
-        req.on('end', () => {
-            // Set up the request to the Wix API
-            const options = {
-                hostname: 'www.wixapis.com',
-                path: '/email-marketing/v1/email-subscriptions/query',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${config.apiKey}`,
-                    'wix-site-id': config.siteId
-                }
-            };
-
-            // Make the request to the Wix API
-            const wixReq = https.request(options, wixRes => {
-                let data = '';
-
-                wixRes.on('data', chunk => {
-                    data += chunk;
-                });
-
-                wixRes.on('end', () => {
-                    // Set CORS headers
-                    res.writeHead(wixRes.statusCode, {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                        'Access-Control-Allow-Headers': 'Content-Type'
-                    });
-
-                    res.end(data);
-                    console.log('Email Subscriptions API Response:', data);
-                });
-            });
-
-            wixReq.on('error', error => {
-                console.error('Error making Wix API request:', error);
-                res.writeHead(500, {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                });
-                res.end(JSON.stringify({ error: 'Failed to make Wix API request' }));
-            });
-
-            // Send the request body to the Wix API
-            wixReq.write(body);
-            wixReq.end();
-        });
-    }
     // Handle OPTIONS requests for CORS preflight
     else if (req.method === 'OPTIONS') {
         res.writeHead(200, {
