@@ -190,10 +190,3 @@ The application implements a proxy server architecture to securely interact with
 - [Orders Introduction](https://dev.wix.com/docs/rest/business-solutions/pricing-plans/pricing-plans/orders/introduction)
 - [List Orders Method](https://dev.wix.com/docs/rest/business-solutions/pricing-plans/pricing-plans/orders/member-orders-service-list-orders)
 
-## Future Enhancements
-
-Potential future enhancements could include:
-- Adding pagination for large result sets
-- Implementing more advanced search filters
-- Adding the ability to update contact information
-- Integrating with additional Wix APIs for more comprehensive information
