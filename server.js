@@ -29,8 +29,96 @@ try {
 const server = http.createServer((req, res) => {
     console.log(`${req.method} ${req.url}`);
 
+    // Test endpoint for under 21 profile
+    if (req.method === 'GET' && req.url === '/api/test/under21') {
+        // Create a test profile for someone under 21
+        const today = new Date();
+        const birthYear = today.getFullYear() - 18; // 18 years old
+        const birthMonth = (today.getMonth() + 1).toString().padStart(2, '0');
+        const birthDay = today.getDate().toString().padStart(2, '0');
+        const birthdate = `${birthYear}-${birthMonth}-${birthDay}`;
+
+        const testProfile = {
+            "contacts": [{
+                "id": "test-under21-profile",
+                "info": {
+                    "name": {
+                        "first": "Test",
+                        "last": "Under21"
+                    },
+                    "emails": {
+                        "items": [{
+                            "email": "test.under21@example.com",
+                            "primary": true
+                        }]
+                    },
+                    "birthdate": birthdate
+                },
+                "primaryInfo": {
+                    "email": "test.under21@example.com"
+                }
+            }],
+            "pagingMetadata": {
+                "count": 1,
+                "offset": 0,
+                "total": 1,
+                "hasNext": false
+            }
+        };
+
+        res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        });
+        res.end(JSON.stringify(testProfile));
+        console.log('Returned test under 21 profile with birthdate:', birthdate);
+    }
+    // Test endpoint for exactly 21 profile
+    else if (req.method === 'GET' && req.url === '/api/test/exactly21') {
+        // Create a test profile for someone exactly 21 years old
+        const today = new Date();
+        const birthYear = today.getFullYear() - 21; // 21 years old
+        const birthMonth = (today.getMonth() + 1).toString().padStart(2, '0');
+        const birthDay = today.getDate().toString().padStart(2, '0');
+        const birthdate = `${birthYear}-${birthMonth}-${birthDay}`;
+
+        const testProfile = {
+            "contacts": [{
+                "id": "test-exactly21-profile",
+                "info": {
+                    "name": {
+                        "first": "Test",
+                        "last": "Exactly21"
+                    },
+                    "emails": {
+                        "items": [{
+                            "email": "test.exactly21@example.com",
+                            "primary": true
+                        }]
+                    },
+                    "birthdate": birthdate
+                },
+                "primaryInfo": {
+                    "email": "test.exactly21@example.com"
+                }
+            }],
+            "pagingMetadata": {
+                "count": 1,
+                "offset": 0,
+                "total": 1,
+                "hasNext": false
+            }
+        };
+
+        res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        });
+        res.end(JSON.stringify(testProfile));
+        console.log('Returned test exactly 21 profile with birthdate:', birthdate);
+    }
     // Handle API proxy requests
-    if (req.method === 'POST' && req.url === '/api/contacts/query') {
+    else if (req.method === 'POST' && req.url === '/api/contacts/query') {
         let body = '';
 
         req.on('data', chunk => {

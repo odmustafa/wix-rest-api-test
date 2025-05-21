@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Under 21 Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #3899ec;
+        }
+
+        .button-container {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #3899ec;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2b7cc0;
+        }
+
+        .results-container {
+            margin-top: 20px;
+        }
+
+        .contact-card {
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .under-21 {
+            border-left: 5px solid red;
+            background-color: #fff8f8;
+        }
+
+        .age-warning {
+            color: red;
+            font-weight: bold;
+            background-color: #ffeeee;
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #ffaaaa;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .age-warning-small {
+            color: red;
+            font-size: 0.8em;
+            background-color: #ffeeee;
+            padding: 2px 5px;
+            border-radius: 3px;
+            border: 1px solid #ffaaaa;
+            display: inline-block;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test Under 21 Profile</h1>
+
+    <div class="button-container">
+        <button id="testUnder21Button">Load Test Under 21 Profile</button>
+        <button id="testExactly21Button">Load Test Exactly 21 Profile</button>
+    </div>
+
+    <div class="loading" id="loading">Loading...</div>
+    <div class="error" id="error"></div>
+
+    <div class="results-container" id="results">
+        <!-- Results will be displayed here -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get references to DOM elements
+            const testUnder21Button = document.getElementById('testUnder21Button');
+            const testExactly21Button = document.getElementById('testExactly21Button');
+            const resultsContainer = document.getElementById('results');
+            const loadingElement = document.getElementById('loading');
+            const errorElement = document.getElementById('error');
+
+            // Handle button clicks
+            testUnder21Button.addEventListener('click', function () {
+                loadTestProfile('/api/test/under21');
+            });
+
+            testExactly21Button.addEventListener('click', function () {
+                loadTestProfile('/api/test/exactly21');
+            });
+
+            // Function to load test profile
+            function loadTestProfile(endpoint) {
+                // Show loading indicator
+                loadingElement.style.display = 'block';
+                // Clear previous results and errors
+                resultsContainer.innerHTML = '';
+                errorElement.style.display = 'none';
+
+                // Make the API request to our test endpoint
+                fetch(endpoint)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('API request failed with status ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Hide loading indicator
+                        loadingElement.style.display = 'none';
+
+                        // Display results
+                        displayResults(data.contacts || []);
+                    })
+                    .catch(error => {
+                        // Hide loading indicator
+                        loadingElement.style.display = 'none';
+
+                        // Show error message
+                        showError('Error loading test profile: ' + error.message);
+                    });
+            }
+
+            // Function to display search results
+            function displayResults(contacts) {
+                if (contacts.length === 0) {
+                    resultsContainer.innerHTML = '<p>No contacts found.</p>';
+                    return;
+                }
+
+                let html = '';
+                contacts.forEach(contact => {
+                    const firstName = contact.info?.name?.first || '';
+                    const lastName = contact.info?.name?.last || '';
+                    const email = contact.primaryInfo?.email || '';
+                    const contactId = contact.id;
+                    const birthdate = contact.info?.birthdate || '';
+
+                    // Calculate age if birthdate is available
+                    let age = '';
+                    try {
+                        if (birthdate) {
+                            console.log('Processing birthdate for contact:', contact.id, birthdate);
+
+                            // Parse the birthdate string directly (format: YYYY-MM-DD)
+                            const [birthYear, birthMonth, birthDay] = birthdate.split('-').map(Number);
+                            console.log('Parsed birth date parts:', { birthYear, birthMonth, birthDay });
+
+                            const today = new Date();
+                            const currentYear = today.getFullYear();
+                            const currentMonth = today.getMonth() + 1; // JavaScript months are 0-indexed
+                            const currentDay = today.getDate();
+                            console.log('Current date parts:', { currentYear, currentMonth, currentDay });
+
+                            // Calculate age
+                            age = currentYear - birthYear;
+
+                            // Adjust age if birthday hasn't occurred yet this year
+                            if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDay < birthDay)) {
+                                age--;
+                            }
+
+                            console.log('Calculated age:', age);
+                        }
+                    } catch (error) {
+                        console.error('Error calculating age:', error);
+                        age = '';
+                    }
+
+                    // Check if contact is under 21
+                    const isUnder21 = age && parseInt(age, 10) < 21;
+
+                    html += `
+                        <div class="contact-card ${isUnder21 ? 'under-21' : ''}" id="contact-${contactId}">
+                            <h3>${firstName} ${lastName}${isUnder21 ? ' <span class="age-warning-small">⚠️ UNDER 21</span>' : ''}</h3>
+                            <p><strong>Contact ID:</strong> ${contactId}</p>
+                            ${email ? `<p><strong>Email:</strong> ${email}</p>` : ''}
+                            ${(() => {
+                            try {
+                                return birthdate ? `<p><strong>Birthday:</strong> ${formatBirthdate(birthdate)}</p>` : '';
+                            } catch (error) {
+                                console.error('Error displaying birthdate:', error);
+                                return birthdate ? `<p><strong>Birthday:</strong> ${birthdate}</p>` : '';
+                            }
+                        })()}
+                            ${(() => {
+                            if (age) {
+                                const ageNum = parseInt(age, 10);
+                                if (!isNaN(ageNum) && ageNum < 21) {
+                                    return `<p><strong>Age:</strong> ${age} <span class="age-warning">⚠️ WARNING: UNDER 21</span></p>`;
+                                } else {
+                                    return `<p><strong>Age:</strong> ${age}</p>`;
+                                }
+                            }
+                            return '';
+                        })()}
+                        </div>
+                    `;
+                });
+
+                // Update the results container with all contact cards
+                resultsContainer.innerHTML = html;
+            }
+
+            // Function to format birthdate in a user-friendly way (e.g., "May 18, 1991")
+            function formatBirthdate(dateString) {
+                try {
+                    if (!dateString || typeof dateString !== 'string' || !dateString.includes('-')) {
+                        return dateString;
+                    }
+
+                    console.log('Formatting birthdate:', dateString);
+
+                    // Parse the date string (format: YYYY-MM-DD)
+                    const parts = dateString.split('-');
+                    if (parts.length !== 3) {
+                        return dateString;
+                    }
+
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1; // JavaScript months are 0-indexed
+                    const day = parseInt(parts[2], 10);
+
+                    if (isNaN(year) || isNaN(month) || isNaN(day)) {
+                        return dateString;
+                    }
+
+                    console.log('Parsed date parts:', { year, month: month + 1, day });
+
+                    // Create a date object using UTC to avoid timezone issues
+                    const date = new Date(Date.UTC(year, month, day));
+                    console.log('Created date object:', date.toISOString());
+
+                    // Format the date using options
+                    const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
+                    const formatted = date.toLocaleDateString(undefined, options);
+                    console.log('Formatted date:', formatted);
+
+                    return formatted;
+                } catch (error) {
+                    console.error('Error formatting birthdate:', error);
+                    return dateString; // Return the original string if there's an error
+                }
+            }
+
+            // Function to show error messages
+            function showError(message) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>
