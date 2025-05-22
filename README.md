@@ -1,6 +1,8 @@
 # Wix Contacts Search
 
-A web application to search for contacts in your Wix site using the Wix REST API, displaying contact information and their associated pricing plan subscriptions.
+A web application to search for contacts in your Wix site using the Wix REST API, displaying contact information and their associated pricing plan subscriptions. This was just a test to figure out how to get some relevant pieces of data using Wix's REST API....it works way better than Wix JavaScript API.
+
+> TODO: still need to figure out which ecommerce/purchase/order endpoints will be needed to add "membership renewal" and "point of sale" functionality into the Front Desk Ops app.
 
 ## Summary of Work Done
 
@@ -35,11 +37,11 @@ A web application to search for contacts in your Wix site using the Wix REST API
 
    To get these values:
    (IGNORE THIS PART IF YOU ARE WORKING DIRECTLY WITH US, ASK OMAR FOR KEYS)
-   - **siteId**: Go to your Wix Dashboard > Settings > General > Advanced > Site ID
-   - **appId**: Create an app in the Wix Developer Center and get the App ID
-   - **apiKey**: Generate an API Key in the Wix Developer Center for your app
+   - **siteId**: use same siteId from "mini_checkin_app-feature-confidence-based-matching",
+   - **apiKey**: use same apiKey from "mini_checkin_app-feature-confidence-based-matching",
+   - **appId**: same as **clientID** from the wix.config.json for "mini_checkin_app-feature-confidence-based-matching"
 
-   For detailed instructions on creating an app and generating API keys, visit the [Wix Developer Center](https://dev.wix.com/)
+   
 
 2. Install Node.js if you haven't already.
 
@@ -55,10 +57,10 @@ A web application to search for contacts in your Wix site using the Wix REST API
 
 ## How to Use
 
-1. Enter a name (first name or last name) in the search box.
+1. Enter a name (first name or last name) in the search box. (i.e. "Omar" or "Raquel" or "Nick")
 2. Click the "Search" button.
 3. The application will query your Wix site's contacts and display matching results.
-4. For contacts that are also members, their subscription information will be displayed.
+4. For contacts that have purchased a membership plan at some point or were granted a Legacy membership, their membership information will be displayed.
 
 ## Features
 
